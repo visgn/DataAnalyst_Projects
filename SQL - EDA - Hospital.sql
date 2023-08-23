@@ -1,29 +1,29 @@
-#1. Get Customers who have cards in the system and show their card info
+--1. Get Customers who have cards in the system and show their card info
 
 SELECT C.ID, C.NAME, X.CARD_NUMBER, X.VALID_DATE, X.STATUS
 FROM customer C
 JOIN CARD X ON X.CUSTOMER_ID = C.ID;
 
-#2. GET all customers who live in Ho Chi Minh City 
+--2. GET all customers who live in Ho Chi Minh City 
 
 SELECT * 
 FROM customer
 WHERE ADDRESS LIKE '%TPHCM%';
 
-#3. how many percentage of ACTIVE and INACTIVE account 
+--3. how many percentage of ACTIVE and INACTIVE account 
 
 SELECT STATUS, COUNT(*)/(SELECT COUNT(*) FROM ACCOUNT)*100 PERCENTAGE_STATUS
 FROM account 
 GROUP BY STATUS;
 
-#4. Show all Doctors with their departments 
+--. Show all Doctors with their departments 
 
 SELECT D.ID, D.NAME, DE.NAME
 FROM doctor D
 LEFT JOIN DOCTOR_IN_DEPARTMENT DD ON D.ID = DD.DOCTOR_ID
 LEFT JOIN DEPARTMENT DE ON DE.ID = DD.DEPARTMENT_ID;
 
-#5. order doctors have most departments to less 
+--5. order doctors have most departments to less 
 
 SELECT D.ID, D.NAME, COUNT(DE.ID) TOTAL_DEP
 FROM DOCTOR D 
@@ -32,13 +32,13 @@ LEFT JOIN DEPARTMENT DE ON DE.ID = DD.DEPARTMENT_ID
 GROUP BY D.ID
 ORDER BY TOTAL_DEP DESC;
 
-#6. which department does not have doctor? 
+--6. which department does not have doctor? 
 
 SELECT * 
 FROM department
 WHERE ID NOT IN (SELECT DEPARTMENT_ID FROM doctor_in_department);
 
-#7. which departments has most doctor? how many ? which has the least ? how many ? 
+--7. which departments has most doctor? how many ? which has the least ? how many ? 
 
 WITH TABLE_X AS
 (SELECT DE.ID, DE.NAME, COUNT(DISTINCT D.ID) TOTAL_DOCTOR
@@ -52,14 +52,14 @@ FROM TABLE_X
 WHERE TOTAL_DOCTOR = (SELECT MIN(TOTAL_DOCTOR) FROM TABLE_X)
 OR TOTAL_DOCTOR = (SELECT MAX(TOTAL_DOCTOR) FROM TABLE_X);
 
-#8. get total revenue each year 
+--8. get total revenue each year 
 
 SELECT YEAR(DATE_TIME) YEAR, SUM(PRICE) INCOME
 FROM booking
 WHERE STATUS = 'PAID'
 GROUP BY YEAR;
 
-#9. which department has the biggest average purchase for appointments at all times? 
+--9. which department has the biggest average purchase for appointments at all times? 
 
 WITH TABLE_X AS
 (SELECT D.ID, D.NAME, AVG(PRICE) AVG_INCOME
@@ -72,13 +72,13 @@ SELECT *
 FROM TABLE_X
 WHERE AVG_INCOME = (SELECT MAX(AVG_INCOME) FROM TABLE_X);
 
-#10. show the total revenue in the last 12 months
+--10. show the total revenue in the last 12 months
 
 SELECT SUM(PRICE) TOTAL_SELL
 FROM booking
 WHERE DATE_TIME > now() - INTERVAL 12 month AND STATUS = 'PAID';
 
-#11. in the last 15 months, which payment method has been used the most and how many percentage
+--11. in the last 15 months, which payment method has been used the most and how many percentage
 
 WITH TABLE_X AS
 (SELECT P.METHOD, COUNT(*) PAYMENT_TIME,
@@ -92,7 +92,7 @@ SELECT *, PAYMENT_TIME/(SELECT SUM(PAYMENT_TIME) FROM TABLE_X)*100 PAYMENT_PERCE
 FROM TABLE_X
 WHERE RANKING = 1;
 
-#12. Show the total appointment each doctor TOOK part in 
+--12. Show the total appointment each doctor TOOK part in 
 
 SELECT D.ID, D.NAME, COUNT(A.ID) TOTAL_APPOINTMENT
 FROM appointment A 
@@ -100,13 +100,13 @@ JOIN DOCTOR D ON D.ID = A.DOCTOR_ID
 WHERE STATUS = 'DONE'
 GROUP BY DOCTOR_ID;
 
-#13. Show all information of an appoinment of a customer?
+--13. Show all information of an appoinment of a customer?
 
 SELECT C.ID CUSTOMER_ID, C.NAME, A.ID APPOINTMENT_ID, A.BOOKING_ID, A.DOCTOR_ID, A.DEPARTMENT_ID, A.DATE_TIME, A.DESCRIPTION, A.STATUS
 FROM appointment A
 RIGHT JOIN CUSTOMER C ON C.ID = A.CUSTOMER_ID;
 
-#14. Which card never paid? 
+--14. Which card never paid? 
 
 WITH TABLE_X AS
 (SELECT C.ID
@@ -119,7 +119,7 @@ SELECT *
 FROM CARD
 WHERE ID NOT IN (SELECT ID FROM TABLE_X);
 
-#15. Show money paid each cards
+--15. Show money paid each cards
 
 SELECT C.*, SUM(B.PRICE) TOTAL_SPENT
 FROM card C
@@ -128,7 +128,7 @@ LEFT JOIN BOOKING B ON B.ID = P.BOOKING_ID
 WHERE B.STATUS = 'PAID'
 GROUP BY C.ID;
 
-#16. Doctor who never had any appointment, show their names and their departments
+--16. Doctor who never had any appointment, show their names and their departments
 
 WITH TABLE_X AS
 (SELECT DOCTOR_ID

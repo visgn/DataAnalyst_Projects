@@ -2,7 +2,7 @@
 
 Hi there, 
 
-I'm Vi and I'm a Junior Data Analyst. 
+I'm Vi and I'm a Data Analyst. 
 You can have a look at my Linkedin: https://www.linkedin.com/in/visgn/
 In this repository, I will show all my codes and queries from personal projects I've worked on.
 --
